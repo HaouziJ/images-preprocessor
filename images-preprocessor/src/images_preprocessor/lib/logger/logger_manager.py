@@ -1,7 +1,7 @@
 import logging
 import time
 import os
-
+from logging import Logger
 
 class LoggerManager:
 
@@ -67,7 +67,7 @@ class LoggerManager:
         return self.__file_writer_service
 
     def __create_logger(self):
-        logger = logging.getLogger(self.logger_name)
+        logger: Logger = logging.getLogger(self.logger_name)
         logger.setLevel(logging.DEBUG)
 
         console_handler = logging.StreamHandler()
