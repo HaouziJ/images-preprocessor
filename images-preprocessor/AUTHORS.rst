@@ -2,4 +2,4 @@
 Contributors
 ============
 
-* haouzij <j@t.fr>
+* haouzij <haouzi.jeremy@gmail.com>
