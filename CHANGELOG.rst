@@ -5,4 +5,5 @@ Changelog
 Version 0.1
 ===========
 
-- images preprocessor
+- Initialization of the structure
+- Creation of the logger and resource manager
