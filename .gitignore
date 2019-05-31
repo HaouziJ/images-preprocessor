@@ -3,4 +3,3 @@ images-preprocessor/.eggs
 images-preprocessor/src/images_preprocessor.egg-info
 deploy.sh
 __pycache__
-images-preprocessor/data
