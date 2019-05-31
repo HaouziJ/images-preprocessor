@@ -26,7 +26,7 @@ class ResourceManager:
         return self.__env
 
     @env.setter
-    def env(self, env):
+    def env(self, env: str):
         self.__env = env
 
     @property
@@ -34,12 +34,12 @@ class ResourceManager:
         return self.__resources_folder
 
     @resources_folder.setter
-    def resources_folder(self, resources_folder):
+    def resources_folder(self, resources_folder: str):
         self.__resources_folder = resources_folder
 
     @property
     def config_file_name(self):
-        self.__config_file_name = os.path.join(self.resources_folder, "{}.properties".format(self.env))
+        self.__config_file_name: str = os.path.join(self.resources_folder, "{}.properties".format(self.env))
         return self.__config_file_name
 
     def get_resources(self, section: str = "DEFAULT"):
