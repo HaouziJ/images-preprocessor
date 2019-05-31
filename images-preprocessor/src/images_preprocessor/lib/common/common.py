@@ -1,7 +1,8 @@
 import time
 from functools import wraps
 from logging import Logger
-
+from configparser import SectionProxy
+import os
 
 def retry(exceptions, tries: int = 2, delay: int = 3, backoff: int = 2, logger: Logger = None):
     """
@@ -36,3 +37,13 @@ def retry(exceptions, tries: int = 2, delay: int = 3, backoff: int = 2, logger: 
             return f(*args, **kwargs)
         return f_retry  # true decorator
     return deco_retry
+
+
+def init_directory_structure(resources: SectionProxy, logger: Logger):
+    for directory_path in resources:
+        directory = resources[directory_path]
+        if not os.path.exists(directory):
+            logger.info('Creating directory {}...'.format(directory))
+            os.makedirs(directory)
+        else:
+            logger.warning('[DONE] Directory {} already exists'.format(directory))
