@@ -1,0 +1,17 @@
+version: "3"
+services:
+
+  images-preprocessor:
+    container_name: "images-preprocessor"
+    image: images-preprocessor:latest
+    build: .
+    tty: true
+    ports: ["5000:5000", "8080:8080"]
+    depends_on:
+      - mongo-database
+    environment:
+      ENV: "dev"
+
+  mongo-database:
+    container_name: "mongo-database"
+    image: mongo:3.6

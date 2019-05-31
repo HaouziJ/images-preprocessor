@@ -4,11 +4,13 @@ WORKDIR /app
 
 COPY . /app
 
-COPY ./images-preprocessor/data/urls.txt /app/data
+RUN mkdir /app/data
 
-RUN mkdir -p /app/logs
+RUN mv /app/images-preprocessor/data/urls.txt /app/data
 
-RUN mkdir -p /app/data
+RUN mkdir /app/logs
+
+RUN python -m pip install --upgrade pip
 
 RUN python -m pip install -r requirements.txt
 
