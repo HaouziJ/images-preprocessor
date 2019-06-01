@@ -19,3 +19,4 @@ click==7.0
 numpy==1.11.3
 opencv-python==4.1.0.25
 pymongo==3.8.0
+flask==1.0.2
