@@ -16,7 +16,11 @@
 # scipy==1.0
 
 click==7.0
-numpy==1.11.3
+numpy
+pandas
 opencv-python==4.1.0.25
 pymongo==3.8.0
 flask==1.0.2
+Flask-PyMongo==2.3.0
+matplotlib
+seaborn
