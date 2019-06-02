@@ -2,12 +2,20 @@
 # -*- coding: utf-8 -*-
 
 import pytest
-
-__author__ = "haouzij"
-__copyright__ = "haouzij"
-__license__ = "mit"
+from images_preprocessor.lib.resources.resource_manager import ResourceManager
+from configparser import SectionProxy
 
 
-def test_fib():
-    assert 2 == 1
+def test_empty_resources():
+    resources: SectionProxy = ResourceManager(env="dev").get_resources(section="ENVIRONMENT")
+
+    assert resources["ENV"] is not None
+
+
+def test_env_resources():
+    dev_resources: SectionProxy = ResourceManager(env="dev").get_resources(section="ENVIRONMENT")
+    prod_resources: SectionProxy = ResourceManager(env="prod").get_resources(section="ENVIRONMENT")
+
+    assert dev_resources["ENV"] != prod_resources["ENV"]
+
 
