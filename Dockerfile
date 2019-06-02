@@ -4,6 +4,9 @@ WORKDIR /app
 
 COPY . /app
 
+ENV FLASK_APP=images_preprocessor.lib.webservice.flask_app
+    ENV=dev
+
 RUN mkdir /app/data
 
 RUN mv /app/images-preprocessor/data/urls.txt /app/data
