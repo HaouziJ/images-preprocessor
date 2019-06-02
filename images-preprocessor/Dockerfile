@@ -4,19 +4,23 @@ WORKDIR /app
 
 COPY . /app
 
-ENV FLASK_APP=images_preprocessor.lib.webservice.flask_app
-    ENV=dev
+ENV SLUGIFY_USES_TEXT_UNIDECODE=yes
+ENV AIRFLOW__CORE__LOAD_EXAMPLES=False
+ENV AIRFLOW_HOME=/root/airflow
 
-RUN mkdir /app/data
+EXPOSE 8080
 
-RUN mv /app/images-preprocessor/data/urls.txt /app/data
-
+RUN apt-get update
+RUN apt-get install -y apt-transport-https
 RUN mkdir /app/logs
-
+RUN mkdir -p /app/data/test
+RUN mv images-preprocessor/data/urls.txt /app/data
 RUN python -m pip install --upgrade pip
+RUN python -m pip install apache-airflow
+RUN mkdir -p /root/airflow/dags
+RUN python -m pip install -r images-preprocessor/requirements.txt
+RUN mv /app/airflow/engine_dag.py /root/airflow/dags
+RUN mv images-preprocessor/entrypoint.sh /
+RUN python -m pip install -e images-preprocessor/
 
-RUN python -m pip install -r requirements.txt
-
-RUN python -m pip install -e images-preprocessor
-
-ENTRYPOINT [ "/bin/bash" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
