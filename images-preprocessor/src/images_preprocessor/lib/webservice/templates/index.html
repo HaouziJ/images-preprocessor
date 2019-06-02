@@ -1,0 +1,9 @@
+<!doctype html>
+<title>Monitoring</title>
+{% if data %}
+  {% for value in data %}
+    <a href="/image/{{ value['md5'] }}">{{ value["md5"] }}</a>
+  {% endfor %}
+{% else %}
+    <h1>Problem</h1>
+{% endif %}
