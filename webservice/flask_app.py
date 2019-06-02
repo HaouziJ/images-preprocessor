@@ -14,12 +14,6 @@ app.config["MONGO_URI"] = "mongodb://mongo-database:27017/image_db"
 mongo = PyMongo(app)
 
 
-@app.route('/home')
-def index():
-    results = mongo.db.target_images.find()
-    return render_template("index.html", data=results)
-
-
 @app.route("/image/<string:md5>")
 def image(md5):
     # 3afd392d481cb31625f86d87e38b7cbc
@@ -27,7 +21,7 @@ def image(md5):
     return send_file(io.BytesIO(results["image"]), mimetype='image/jpg')
 
 
-@app.route('/transfo_per_minute.png')
+@app.route('/monitoring')
 def transformation_per_minute():
 
     transformation = mongo.db.monitoring.find()
@@ -44,9 +38,12 @@ def transformation_per_minute():
 
 
 @app.route("/")
-@app.route("/monitoring")
-def monitoring():
-    return render_template("monitoring.html")
+def index():
+    results = mongo.db.target_images.find()
+    transformation_s = mongo.db.monitoring.find({"state": "success"}).count()
+    transformation_e = mongo.db.monitoring.find({"state": "error"}).count()
+    return render_template("index.html", transformation_s=transformation_s,
+                           transformation_e=transformation_e, results=results)
 
 
 if __name__ == '__main__':
