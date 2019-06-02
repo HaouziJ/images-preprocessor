@@ -1,27 +1,17 @@
 from flask import Flask
 from flask import render_template, send_file
 from flask_pymongo import PyMongo
-import os
-from configparser import SectionProxy
-from images_preprocessor.lib.resources.resource_manager import ResourceManager
-from images_preprocessor.lib.logger.logger_manager import LoggerManager
-from images_preprocessor.lib.webservice.flask_manager import FlaskManager
-from logging import Logger
 import pandas
 import io
 import seaborn as sns
 import matplotlib.pyplot as plt
+import os
 
-resources: SectionProxy = ResourceManager(env=os.environ["ENV"]).get_resources(section="MONGODB")
-logger: Logger = LoggerManager(logger_name="IMAGE", log_folder=resources["LOG_DIR"], log_level="DEBUG").logger
-
+debug = os.environ.get('Foo') if os.environ.get('Foo') else False
 
 app = Flask(__name__)
-
-flask_instance = FlaskManager(app=app, resources=resources)
-flask_instance.init_flask_app()
-
-mongo = PyMongo(flask_instance.app)
+app.config["MONGO_URI"] = "mongodb://mongo-database:27017/image_db"
+mongo = PyMongo(app)
 
 
 @app.route('/home')
@@ -57,3 +47,7 @@ def transformation_per_minute():
 @app.route("/monitoring")
 def monitoring():
     return render_template("monitoring.html")
+
+
+if __name__ == '__main__':
+    app.run(debug=debug, host='0.0.0.0')
