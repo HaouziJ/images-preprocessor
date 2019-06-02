@@ -8,7 +8,7 @@ import hashlib
 from numpy import divide, ndarray
 from configparser import SectionProxy
 from datetime import datetime
-from numpy import fromstring, uint8
+from numpy import frombuffer, uint8
 
 
 class ImageManager:
@@ -65,7 +65,7 @@ class ImageManager:
         except Exception as e:
             self.logger.exception(e)
 
-    def __download_image(self, image_link: str, index: int):
+    def download_image(self, image_link: str, index: int, key_folder: str = "ORIGINAL_IMAGE_DIR"):
         self.logger.debug("Downloading image number {}...".format(index))
         self.logger.debug("Link {}...".format(image_link))
         try:
@@ -74,11 +74,11 @@ class ImageManager:
 
             if response is not None:
                 byte_image = response.read()
-                image_path = os.path.join(self.resources["ORIGINAL_IMAGE_DIR"], "original_{}.jpg".format(index))
+                image_path = os.path.join(self.resources[key_folder], "original_{}.jpg".format(index))
+                self.logger.debug("Writing image to {}...".format(image_path))
                 with open(image_path, 'wb') as output:
-                    self.logger.debug("Writing image to {}...".format(image_path))
                     output.write(byte_image)
-                image: ndarray = self.__decode_image(byte_image)
+                image: ndarray = self.decode_image(byte_image)
                 return "success", image, image.shape
             else:
                 return "error", "error", ()
@@ -89,7 +89,7 @@ class ImageManager:
             self.logger.error(error)
             return "error", ()
 
-    def __read_image(self, image_file: str):
+    def read_image(self, image_file: str):
         try:
             self.logger.debug("Reading image {}...".format(image_file))
             image = imread(image_file)
@@ -98,7 +98,7 @@ class ImageManager:
             self.logger.exception(e)
             return None
 
-    def __write_image(self, image_file_path: str, image: ndarray):
+    def write_image(self, image_file_path: str, image: ndarray):
         try:
             self.logger.debug("Writing image to {}...".format(image_file_path))
             state = imwrite(image_file_path, image)
@@ -108,7 +108,7 @@ class ImageManager:
             self.logger.exception(e)
             return None
 
-    def __compute_md5(self, image: ndarray):
+    def compute_md5(self, image: ndarray):
         md5_hash = hashlib.md5()
         try:
             md5_hash.update(image)
@@ -117,7 +117,7 @@ class ImageManager:
             self.logger.error("Wrong given type to hash with md5: {}".format(type_error))
             return "error", ""
 
-    def __compute_gray_level(self, image: ndarray):
+    def compute_gray_level(self, image: ndarray):
         try:
             return "success", divide(image, 3)
         except TypeError:
@@ -133,14 +133,14 @@ class ImageManager:
             self.img_url_list: list = [url for url in file.read().split("\n") if url.startswith("http")]
 
     @staticmethod
-    def __decode_image(image):
+    def decode_image(image):
         try:
-            return imdecode(fromstring(image, uint8), IMREAD_COLOR)
+            return imdecode(frombuffer(image, uint8), IMREAD_COLOR)
         except AttributeError:
             return image
 
     @staticmethod
-    def __encode_image(image: ndarray):
+    def encode_image(image: ndarray):
         try:
             return imencode('.jpg', image)[1].tostring()
         except TypeError:
@@ -153,10 +153,10 @@ class ImageManager:
         url_length: int = len(self.img_url_list)
         self.logger.info("Starting downloading for {} images...".format(url_length))
         for url, index in zip(self.img_url_list, range(url_length)):
-            state, image, shape = self.__download_image(url, index)
+            state, image, shape = self.download_image(url, index)
             self.logger.debug({"url": url, "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
             self.documents.append({"url": url,
-                                   "image": self.__encode_image(image),
+                                   "image": self.encode_image(image),
                                    "shape": shape,
                                    "state": state,
                                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
@@ -164,16 +164,16 @@ class ImageManager:
 
     def collect_gray_and_md5(self, documents: list):
         for document in documents:
-            md5_state, md5 = self.__compute_md5(document["image"])
-            gray_state, gray_image = self.__compute_gray_level(self.__decode_image(document["image"]))
-            self.__write_image(os.path.join(self.resources["GRAY_IMAGE_DIR"], "{}.jpg".format(md5)), gray_image)
+            md5_state, md5 = self.compute_md5(document["image"])
+            gray_state, gray_image = self.compute_gray_level(self.decode_image(document["image"]))
+            self.write_image(os.path.join(self.resources["GRAY_IMAGE_DIR"], "{}.jpg".format(md5)), gray_image)
 
             self.logger.debug("{} and {}".format(md5_state, gray_state))
 
             if md5_state == "success" and gray_state == "success":
                 size = gray_image.shape[:2]
                 self.documents.append({"md5": md5,
-                                       "image": self.__encode_image(gray_image),
+                                       "image": self.encode_image(gray_image),
                                        "size": size,
                                        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
                 self.monitoring.append({"url": document["url"],
