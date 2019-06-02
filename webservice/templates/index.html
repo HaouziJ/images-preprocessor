@@ -26,13 +26,13 @@
 						</div>
                         <div class="features-wrap">
                             <div class="feature is-revealing">
-                            	<a href="/monitorgin">
+                            	<a href="/monitoring">
                                 <div class="feature-inner">
                                     <div class="feature-icon">
                                         <img src="/static/images/feature-icon-01.svg" alt="Feature 01">
                                     </div>
                                     <h4 class="feature-title">Monitoring page</h4>
-                                    <p class="text-sm">show you the as an histogram, final state of each transformation done on images</p>
+                                    <p class="text-sm">show you as an histogram, the final state of each transformation done on images</p>
                                 </div>
                                 </a>
                             </div>
@@ -64,7 +64,8 @@
 										<div class="pricing-table-main">
 											<div class="pricing-table-header mb-24 pb-24">
 												<div class="pricing-table-title h4 mt-0 mb-16">Number of state per seconds</div>
-												<div class="pricing-table-price"><span class="pricing-table-price-currency"></span><span class="pricing-table-price-amount h1">{{ transformation }}</span> success</div>
+												<div class="pricing-table-price"><span class="pricing-table-price-currency"></span><span class="pricing-table-price-amount h1">{{ transformation_s }}</span> success</div>
+                                                <div class="pricing-table-price"><span class="pricing-table-price-currency"></span><span class="pricing-table-price-amount h1">{{ transformation_e }}</span> error</div>
 											</div>
                                          <a href="/monitoring">
 										<img src="/monitoring" alt="Image not found">
@@ -86,13 +87,12 @@
 							<ul class="tabs-links">
                               {% for value in results %}
 								<li class="is-revealing">
-                                  <a href="/image/{{ value['md5'] }}">
-									<a href="#" class="tab-link">
+									<a href="/image/{{ value['md5'] }}" class="tab-link">
 										<img src="/image/{{ value['md5'] }}" alt="Tabs icon 01">
-										<span class="h4 m-0" >{{ value["md5"] }}</span>
-									</a>
-                                  </a>
+                                        <span class="h4 m-0" >md5: {{ value["md5"] }} <br />size: {{ value["size"] }}</span>
+                                    </a>
 								</li>
+
                               {% endfor %}
 							</ul>
                           </center>
