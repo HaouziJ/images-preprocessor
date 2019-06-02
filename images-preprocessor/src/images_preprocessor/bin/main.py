@@ -11,7 +11,7 @@ from pymongo.collection import Collection
 
 
 @click.command()
-@click.option('--env', help="Environment in which run the function", default="dev")
+@click.option('--env', envvar='ENV', help="Environment in which run the function", default="dev")
 def main_init_directory_structure(env: str):
 
     resources: SectionProxy = ResourceManager(env=env).get_resources()
@@ -21,16 +21,17 @@ def main_init_directory_structure(env: str):
 
 
 @click.command()
-@click.option('--env', help="Environment in which run the function", default="dev")
+@click.option('--env', envvar='ENV', help="Environment in which run the function", default="dev")
 @click.option('--imgfile', help="Overwrite image file path", default="")
-def main_collect_insert_images(env: str, imgfile: str):
+@click.option('--loglevel', help="Set the logging level", default="DEBUG")
+def main_collect_insert_images(env: str, imgfile: str, loglevel: str = "DEBUG"):
 
     resources: SectionProxy = ResourceManager(env=env).get_resources()
     db_resources: SectionProxy = ResourceManager(env=env).get_resources(section="MONGODB")
 
-    logger: Logger = LoggerManager(logger_name="IMAGE", log_folder=resources["LOG_DIR"], log_level="DEBUG").logger
-    db_logger: Logger = LoggerManager(logger_name="MONGO", log_folder=resources["LOG_DIR"], log_level="DEBUG").logger
-    main_logger: Logger = LoggerManager(logger_name="MAIN", log_folder=resources["LOG_DIR"], log_level="DEBUG").logger
+    logger: Logger = LoggerManager(logger_name="IMAGE", log_folder=resources["LOG_DIR"], log_level=loglevel).logger
+    db_logger: Logger = LoggerManager(logger_name="MONGO", log_folder=resources["LOG_DIR"], log_level=loglevel).logger
+    main_logger: Logger = LoggerManager(logger_name="MAIN", log_folder=resources["LOG_DIR"], log_level=loglevel).logger
 
     image_file_path: str = imgfile if imgfile != "" else os.path.join(resources["DATA_DIR"], "urls.txt")
 
@@ -48,15 +49,16 @@ def main_collect_insert_images(env: str, imgfile: str):
 
 
 @click.command()
-@click.option('--env', help="Environment in which run the function", default="dev")
-def main_compute_insert_md5_and_gray(env: str):
+@click.option('--env', envvar='ENV', help="Environment in which run the function", default="dev")
+@click.option('--loglevel', help="Set the logging level", default="DEBUG")
+def main_compute_insert_md5_and_gray(env: str, loglevel: str = "DEBUG"):
 
     resources: SectionProxy = ResourceManager(env=env).get_resources()
     db_resources: SectionProxy = ResourceManager(env=env).get_resources(section="MONGODB")
 
-    logger: Logger = LoggerManager(logger_name="IMAGE", log_folder=resources["LOG_DIR"], log_level="DEBUG").logger
-    db_logger: Logger = LoggerManager(logger_name="MONGO", log_folder=resources["LOG_DIR"], log_level="DEBUG").logger
-    main_logger: Logger = LoggerManager(logger_name="MAIN", log_folder=resources["LOG_DIR"], log_level="DEBUG").logger
+    logger: Logger = LoggerManager(logger_name="IMAGE", log_folder=resources["LOG_DIR"], log_level=loglevel).logger
+    db_logger: Logger = LoggerManager(logger_name="MONGO", log_folder=resources["LOG_DIR"], log_level=loglevel).logger
+    main_logger: Logger = LoggerManager(logger_name="MAIN", log_folder=resources["LOG_DIR"], log_level=loglevel).logger
 
     image_manager = ImageManager(resources=resources, logger=logger)
     mongo_manager = MongoManager(resources=db_resources, logger=db_logger)
