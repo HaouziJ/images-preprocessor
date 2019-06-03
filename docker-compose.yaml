@@ -1,0 +1,28 @@
+version: "3"
+services:
+
+  web-app:
+    container_name: "web-app"
+    image: web-app:latest
+    build: webservice/
+    tty: true
+    ports: ["5000:5000"]
+    depends_on:
+      - mongo-database
+
+  images-preprocessor:
+    container_name: "images-preprocessor"
+    image: images-preprocessor:latest
+    build:
+      context: ./
+      dockerfile: ./images-preprocessor/Dockerfile
+    tty: true
+    ports: ["8080:8080"]
+    depends_on:
+      - mongo-database
+    environment:
+      ENV: "dev"
+
+  mongo-database:
+    container_name: "mongo-database"
+    image: mongo:3.6

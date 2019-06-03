@@ -1,0 +1,5 @@
+images-preprocessor/.eggs
+.idea
+images-preprocessor/src/images_preprocessor.egg-info
+deploy.sh
+__pycache__

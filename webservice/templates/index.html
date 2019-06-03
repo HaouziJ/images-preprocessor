@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Monitoring</title>
+    <link href="https://fonts.googleapis.com/css?family=Oxygen:400,700|Arimo:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
+</head>
+<body class="is-boxed has-animations">
+    <div class="body-wrap boxed-container">
+
+
+        <main>
+			<section class="features section text-center">
+                <div class="container">
+                    <div class="features-inner section-inner has-top-divider">
+						<div class="features-header text-center">
+							<div class="container-sm">
+								<h2 class="section-title mt-0">Images preprocessor engine</h2>
+								<p class="section-paragraph mb-0">An engine to compute MD5 of your images, and convert them to gray level.
+								Link on the Github project: </p><a href="https://github.com/HaouziJ/images-preprocessor.git">Github Project</a>
+							</div>
+						</div>
+                        <div class="features-wrap">
+                            <div class="feature is-revealing">
+                            	<a href="/monitoring">
+                                <div class="feature-inner">
+                                    <div class="feature-icon">
+                                        <img src="/static/images/feature-icon-01.svg" alt="Feature 01">
+                                    </div>
+                                    <h4 class="feature-title">Monitoring page</h4>
+                                    <p class="text-sm">show you as an histogram, the final state of each transformation done on images</p>
+                                </div>
+                                </a>
+                            </div>
+                            <div class="feature is-revealing">
+                            	<a href="#md5Liste">
+                                <div class="feature-inner">
+                                    <div class="feature-icon">
+                                        <img src="/static/images/feature-icon-04.svg" alt="Feature 04">
+                                    </div>
+                                    <h4 class="feature-title">MD5 list</h4>
+                                    <p class="text-sm">show you the list of all MD5 available, linked to their corresponding images</p>
+                                </div>
+                                </a>
+                            </div>
+                            <div class="feature is-revealing">
+                            	<a href="http://localhost:8080/admin">
+                                <div class="feature-inner">
+                                    <div class="feature-icon">
+                                        <img src="/static/images/feature-icon-03.svg" alt="Feature 04">
+                                    </div>
+                                    <h4 class="feature-title">Airflow</h4>
+                                    <p class="text-sm">provides you a web interface to run the images preprocessor engine DAG</p>
+                                </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+          <section class="pricing section">
+                <div class="container">
+                    <div class="pricing-inner section-inner">
+                        <h2 class="section-title mt-0 text-center">Monitoring</h2>
+						<div>
+							<div class="pricing-tables-wrap">
+
+								<div class="pricing-table is-revealing">
+									<div class="pricing-table-inner">
+										<div class="pricing-table-main">
+											<div class="pricing-table-header mb-24 pb-24">
+												<div class="pricing-table-title h4 mt-0 mb-16">Number of state per seconds</div>
+												<div class="pricing-table-price"><span class="pricing-table-price-currency"></span><span class="pricing-table-price-amount h1">{{ transformation_s }}</span> success</div>
+                                                <div class="mpricing-table-price"><span class="pricing-table-price-currency"></span><span class="pricing-table-price-amount h1">{{ transformation_e }}</span> error</div>
+											</div>
+                                         <a href="/monitoring">
+										<img src="/monitoring" alt="Image not found">
+                                           </a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                    </div>
+                </div>
+            </section>
+
+			<section id="md5Liste" class="features-tabs section">
+                <div class="container">
+                    <div class="features-tabs-inner section-inner has-top-divider">
+						<div class="tabs-container">
+                          <center>
+							<ul class="tabs-links">
+                              {% for value in results %}
+								<li class="is-revealing">
+									<a href="/image/{{ value['md5'] }}" class="tab-link">
+										<img src="/image/{{ value['md5'] }}" alt="Tabs icon 01">
+                                        <span class="h4 m-0" >md5: {{ value["md5"] }} <br />size: {{ value["size"] }}</span>
+                                    </a>
+								</li>
+                              {% endfor %}
+							</ul>
+                          </center>
+						</div>
+                    </div>
+                </div>
+            </section>
+
+
+
+			<section class="cta section">
+				<div class="container">
+					<div class="cta-inner section-inner is-revealing">
+						</div>
+                </div>
+			</section>
+        </main>
+
+        <footer class="site-footer">
+            <div class="container">
+            </div>
+        </footer>
+    </div>
+
+    <script src="/static/js/main.min.js"></script>
+</body>
+</html>
