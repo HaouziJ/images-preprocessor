@@ -8,15 +8,15 @@ Images preprocessor engine
 Description
 ===========
 
-Objectifs:
-- Recuperer les images accessibles par les urls contenues dans le fichier urls.txt.
-- Developper une tache qui calculera la MD5 de l'image
-- Developper une tache qui transformera l'image en niveau de gris avec le calcul suivant: (R + G + B) / 3
-- Developper une tache qui recuperera les outputs des deux precedents workers. Il devra egalement inserer dans une base
-de donnees MongoDB, les informations (md5, l'image en niveau de gris, la hauteur et la largeur de l'image, la date d'insertion).
-- Developper une api en Flask pour visualiser les images stockees dans MongoDB via l'url http://localhost:5000/image/<MD5>
-- Developper une api en Flask de monitoring via l'url http://localhost:5000/monitoring. Cette api devra retourner un
-histogramme decrivant le nombre d'images traitees avec succes ou erreur par interval d'une minute. (Prevoir une collection dans MongoDB pour recuperer ces informations)
+###goal:
+- Get and download all images  from urls.txt file
+- Develop a task which compute the MD5 of each image
+- Develop a task which compute gray level of the image applying: (R + G + B) / 3
+- Get the output of the two precedent tasks, and insert information into a MongoDB database
+as: md5, gray level image, size, insertion date.
+- Develop a flask webservice to visualize results stored inside the MongoDB by the url http://localhost:5000/image/<MD5>
+- Develop a flask webservice to get monitoring from url http://localhost:5000/monitoring. This API will return
+an histogram showing the number of image transformed per minutes or per seconds. 
 
 
 Requirements
@@ -42,9 +42,18 @@ Installation
 
     docker-compose up
     
-This command will create 3 containers:
+This command will create 3 containers. It can take few minutes:
 
 ![Alt text](images/docker_view.png)
+
+This command will launch:
+- The mongoDB database
+- The flask web server
+- The unit test for images preprocessor
+    - If the tests are all success it will launch:
+        - The airflow web server
+        - The airflow scheduler
+        - Trigger once the DAG images preprocessor
 
 Execution
 =========
