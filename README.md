@@ -8,7 +8,7 @@ Images preprocessor engine
 Description
 ===========
 
-###goal:
+### goal:
 - Get and download all images  from urls.txt file
 - Develop a task which compute the MD5 of each image
 - Develop a task which compute gray level of the image applying: (R + G + B) / 3
