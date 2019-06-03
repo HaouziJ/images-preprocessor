@@ -22,8 +22,10 @@ an histogram showing the number of image transformed per minutes or per seconds.
 Requirements
 ============
 This project is fully-based on docker container.
-Docker has to be installed on your host machine.
-See: https://docs.docker.com/install/
+Docker and docker-compose have to be installed on your host machine.
+See: 
+- https://docs.docker.com/install/
+- https://docs.docker.com/compose/install/
 
 Please also check your internet connection, needed for image downloading.
 
