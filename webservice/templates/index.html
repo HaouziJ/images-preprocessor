@@ -47,6 +47,17 @@
                                 </div>
                                 </a>
                             </div>
+                            <div class="feature is-revealing">
+                            	<a href="http://localhost:8080/admin">
+                                <div class="feature-inner">
+                                    <div class="feature-icon">
+                                        <img src="/static/images/feature-icon-03.svg" alt="Feature 04">
+                                    </div>
+                                    <h4 class="feature-title">Airflow</h4>
+                                    <p class="text-sm">provides you a web interface to run the images preprocessor engine DAG</p>
+                                </div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -65,7 +76,7 @@
 											<div class="pricing-table-header mb-24 pb-24">
 												<div class="pricing-table-title h4 mt-0 mb-16">Number of state per seconds</div>
 												<div class="pricing-table-price"><span class="pricing-table-price-currency"></span><span class="pricing-table-price-amount h1">{{ transformation_s }}</span> success</div>
-                                                <div class="pricing-table-price"><span class="pricing-table-price-currency"></span><span class="pricing-table-price-amount h1">{{ transformation_e }}</span> error</div>
+                                                <div class="mpricing-table-price"><span class="pricing-table-price-currency"></span><span class="pricing-table-price-amount h1">{{ transformation_e }}</span> error</div>
 											</div>
                                          <a href="/monitoring">
 										<img src="/monitoring" alt="Image not found">
@@ -92,7 +103,6 @@
                                         <span class="h4 m-0" >md5: {{ value["md5"] }} <br />size: {{ value["size"] }}</span>
                                     </a>
 								</li>
-
                               {% endfor %}
 							</ul>
                           </center>
