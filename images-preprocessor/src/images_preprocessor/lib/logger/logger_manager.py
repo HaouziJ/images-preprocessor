@@ -81,11 +81,11 @@ class LoggerManager:
         logger.addHandler(console_handler)
 
         if self.file_writer_service:
-            self.set_file_writer(logger)
+            self.__set_file_writer(logger)
 
         return logger
 
-    def set_file_writer(self, logger):
+    def __set_file_writer(self, logger):
         timestamp = time.strftime('%Y%m%d')
         log_file_path = os.path.join(self.log_folder, "{}_{}.log".format(timestamp, self.logger_name))
         file_handler = logging.FileHandler(log_file_path)

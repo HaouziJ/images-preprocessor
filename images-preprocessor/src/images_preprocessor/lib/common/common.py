@@ -4,6 +4,7 @@ from logging import Logger
 from configparser import SectionProxy
 import os
 
+
 def retry(exceptions, tries: int = 2, delay: int = 3, backoff: int = 2, logger: Logger = None):
     """
     Retry calling the decorated function using an exponential backoff.

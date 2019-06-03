@@ -14,6 +14,15 @@ from numpy import frombuffer, uint8
 class ImageManager:
 
     def __init__(self, resources: SectionProxy, img_url_file: str = None, logger: Logger = None):
+        """
+        This class handle all operations applied on images, like read, write, encode, decode
+        or compute gray level and md5.
+
+        :param resources: Resources instance from the resource manager
+        :param img_url_file: Path of the image file containing urls
+        :param logger: Logger instance from logger manager
+        """
+
         self.__img_url_file = img_url_file
         self.__resources = resources
         self.__logger = logger
@@ -65,7 +74,18 @@ class ImageManager:
         except Exception as e:
             self.logger.exception(e)
 
-    def download_image(self, image_link: str, index: int, key_folder: str = "ORIGINAL_IMAGE_DIR"):
+    def download_image(self, image_link: str, index, key_folder: str = "ORIGINAL_IMAGE_DIR"):
+        """
+        This function will download an image, write it to the file system and return the image, the image shape
+        and the state
+
+        :param image_link: URL link of the image
+        :param index: Index or suffix name of the image name
+        :param key_folder: Key of the property file giving the folder path to save the image
+        :return: state: str
+        :return: image: ndarray
+        :return: shape: tuple
+        """
         self.logger.debug("Downloading image number {}...".format(index))
         self.logger.debug("Link {}...".format(image_link))
         try:
@@ -108,7 +128,14 @@ class ImageManager:
             self.logger.exception(e)
             return None
 
-    def compute_md5(self, image: ndarray):
+    def compute_md5(self, image: bytes):
+        """
+        This function will compute the md5 of a binary image and return the state and the md5 hash
+
+        :param image: Image as bytes to compute md5
+        :return: state: str
+        :return: md5: str
+        """
         md5_hash = hashlib.md5()
         try:
             md5_hash.update(image)
@@ -118,6 +145,14 @@ class ImageManager:
             return "error", ""
 
     def compute_gray_level(self, image: ndarray):
+        """
+        This function will compute the gray level of an image. It will divide by 3 all the image array, and return it
+        with the transformation state.
+
+        :param image: Image as an array
+        :return: state: str
+        :return: image: ndarray
+        """
         try:
             return "success", divide(image, 3)
         except TypeError:
@@ -149,6 +184,12 @@ class ImageManager:
             return image
 
     def collect_images(self):
+        """
+        This function will download all images of the image file and insert them in a document list with their
+        url, shape, state and insertion timestamp.
+
+        :return: documents: list
+        """
         self.__get_images_link()
         url_length: int = len(self.img_url_list)
         self.logger.info("Starting downloading for {} images...".format(url_length))
@@ -163,6 +204,14 @@ class ImageManager:
         return self.documents
 
     def collect_gray_and_md5(self, documents: list):
+        """
+        This function will get all images of the document list, compute the gray level and md5, write the new image
+        on docker file system naming them with the md5, and finally insert all images with success state in a collection
+        and information about transformation in another monitoring collection.
+
+        :param documents: List of documents containing original images
+        :return:
+        """
         for document in documents:
             md5_state, md5 = self.compute_md5(document["image"])
             gray_state, gray_image = self.compute_gray_level(self.decode_image(document["image"]))
