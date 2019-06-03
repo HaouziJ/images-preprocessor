@@ -8,7 +8,7 @@ env = Variable.get("ENV", default_var=os.environ.get('ENV'))
 log_level = Variable.get("LOG_LEVEL", default_var="DEBUG")
 
 args = {
-    'owner': 'QuickSign'
+    'owner': 'Airflow'
 }
 
 dag = DAG(
